@@ -1,7 +1,26 @@
-import React from 'react'
-import hotelInfoData from '../data/hotel_info.json'
+import React, { useEffect, useState } from 'react'
 
 const HotelInfo = () => {
+  const [ accessibilityData, setAccessibilityData ] = useState([]);
+  const [ servicesData, setServicesData ] = useState([]);
+
+  const loadAccessibilityData = async() => {
+    const resp = await fetch('https://lt267sgtj1.execute-api.us-east-1.amazonaws.com/ProductionLandonHotel/accessibilities');
+    let jsonData = await resp.json();
+    setAccessibilityData(jsonData)
+  };
+
+  const loadServicesData = async() => {
+    const resp = await fetch('https://lt267sgtj1.execute-api.us-east-1.amazonaws.com/ProductionLandonHotel/services');
+    let jsonData = await resp.json();
+    setServicesData(jsonData)
+  };
+
+  useEffect(() => {
+    loadAccessibilityData()
+    loadServicesData()
+  }, []);
+
   return (
     <div className="scene" id="hotelinfo">
       <article className="heading">
@@ -23,14 +42,14 @@ const HotelInfo = () => {
           <h2>Services and Amenities</h2>
           <p>Our services and amenities are designed to make your travel easy, your stay comfortable, and your experience one-of-a-kind.</p>
           <ul>
-            {hotelInfoData.services.map((service, index) => <li key={index}>{service.text}</li>)}
+            {servicesData.map((service, index) => <li key={index}>{service.name}</li>)}
           </ul>
         </section>
         <section className="checklist" id="accessibility">
           <h2>Accessibility</h2>
           <p>We're committed to maintaining the same quality of service for every individual. We offer the following facilities for those with special needs:</p>
           <ul>
-          {hotelInfoData.accesibility.map((accesibilityAccomodation, index) => <li key={index}>{accesibilityAccomodation.text}</li>)}
+          {accessibilityData.map((accessibility, index) => <li key={index}>{accessibility.name}</li>)}
           </ul>
         </section>
       </article>
